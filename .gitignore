@@ -1,0 +1,18 @@
+# Entorno virtual: se recrea con requirements.txt
+.venv/
+
+# Datos extraidos: van a GCS, no a Git
+data/
+
+# Caches de Python
+__pycache__/
+*.pyc
+
+# Variables de entorno y credenciales
+.env
+
+# Configuracion local del editor
+.vscode/
+
+# Configuracion personal: lista de personajes
+config.toml

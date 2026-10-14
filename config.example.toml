@@ -1,0 +1,13 @@
+# Configuracion de la extraccion.
+# Copiar este archivo como config.toml y completarlo con tus personajes.
+# config.toml esta en .gitignore: tus datos no se suben al repositorio.
+
+# Mundo de los personajes:
+#   2 = US PC/PS   4 = EU PC/PS   10 = US Switch   11 = EU Switch   5001 = Xbox
+world_id = 2
+
+# Nombres exactos, tal como aparecen en el juego (mayusculas y espacios incluidos).
+characters = [
+    "Example Hero",
+    "Example Villain",
+]
