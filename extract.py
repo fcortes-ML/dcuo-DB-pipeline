@@ -84,6 +84,14 @@ def load_config() -> tuple[str, list[str]]:
 
 _last_request = 0.0
 
+# Errores que la API devuelve dentro del JSON (con HTTP 200) y que son
+# pasajeros: conviene reintentar en lugar de dar el personaje por fallido.
+RETRYABLE_API_ERRORS = ("service_unavailable",)
+
+
+class RetryableAPIError(Exception):
+    """Error transitorio informado por la API dentro de la respuesta."""
+
 
 def census_get(collection: str, params: dict) -> dict:
     """GET a una coleccion, respetando el intervalo minimo y con reintentos."""
@@ -97,8 +105,11 @@ def census_get(collection: str, params: dict) -> dict:
         try:
             response = requests.get(url, params=params, timeout=TIMEOUT_S)
             response.raise_for_status()
-            return response.json()
-        except (requests.RequestException, ValueError) as exc:
+            data = response.json()
+            if str(data.get("error", "")).lower() in RETRYABLE_API_ERRORS:
+                raise RetryableAPIError(f"la API devolvio error: {data['error']}")
+            return data
+        except (requests.RequestException, ValueError, RetryableAPIError) as exc:
             if attempt == MAX_RETRIES:
                 raise
             backoff = 5 * 2 ** (attempt - 1)
