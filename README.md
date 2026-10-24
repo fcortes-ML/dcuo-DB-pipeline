@@ -15,9 +15,9 @@ Joining the two requires building a bridge table from evidence: diffs between sn
 | 1 | Project setup and raw extraction | Done |
 | 2 | API exploration and hypothesis testing | Next |
 | 3 | Feat catalog extraction and quality checks | Planned |
-| 4 | Cloud load: GCS landing, BigQuery staging and models | Planned |
-| 5 | Bridge table: mapping feat IDs to feat definitions | Planned |
-| 6 | Automation: scheduled runs, dbt and orchestration | Planned |
+| 4 | Cloud load: GCS landing, BigQuery raw tables and dbt staging models | Planned |
+| 5 | Bridge table: mapping feat IDs to feat definitions (built as tested dbt models) | Planned |
+| 6 | Automation: scheduled runs and orchestration | Planned |
 
 ## How it works
 
@@ -82,7 +82,16 @@ Run:
 ## Tech stack
 
 Current: Python (`requests`) and the Census REST API.
-Planned: Google Cloud Storage, BigQuery, dbt and a workflow orchestrator.
+Planned: Google Cloud Storage, BigQuery, dbt (staging models, tests and docs) and a workflow orchestrator.
+
+## Planned modeling with dbt
+
+Once the raw snapshots are loaded into BigQuery, transformations will be managed with dbt:
+
+- **Staging**: one model per collection, flattening the JSON and keeping the latest load per date.
+- **Marts**: characters, feat catalog and completed feats per character.
+- **Tests**: unique and not-null IDs, relationships between feats and the catalog, accepted values for decoded codes, and a feat point-total checksum.
+- **Seeds**: small lookup tables for decoded IDs.
 
 ## Data source
 
